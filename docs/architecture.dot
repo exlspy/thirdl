@@ -1,0 +1,40 @@
+digraph G {
+  rankdir=TB; nodesep=0.3; ranksep=0.42; newrank=true;
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=12, margin="0.14,0.09", width=2.6];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#555555"];
+
+  user [label="Пользователь\nCommand Palette / Ctrl+Alt+G / Ctrl+Alt+W", fillcolor="#FFF3CD", width=4.2];
+  manifest [label="package.json\ncontributes: commands, keybindings,\nmenus, configuration", fillcolor="#E2E3E5", width=4.2];
+  ext [label="extension.ts\nactivate(), команды, vscode API", fillcolor="#CCE5FF", width=4.2];
+
+  parser [label="parser.ts\nsplitSegments (автомат),\nparseDsl", fillcolor="#D4EDDA"];
+  gen [label="generator.ts\nрекурсивный обход AST,\nтабстопы", fillcolor="#D4EDDA"];
+  ast [label="ast.ts\nузлы AST:\nIf/For/Foreach/While/\nSwitch/Func/Try", fillcolor="#D4EDDA"];
+  lang [label="languages.ts\nMap<languageId, профиль>\nраскладки (Strategy)", fillcolor="#D4EDDA"];
+  indent [label="indent.ts\ncommonIndent / dedent", fillcolor="#D4EDDA"];
+  hist [label="history.ts\nLRU-история", fillcolor="#D4EDDA"];
+
+  editor [label="Редактор\ninsertSnippet() / edit.replace()", fillcolor="#FFF3CD"];
+  state [label="globalState\n(сохранение истории)", fillcolor="#E2E3E5"];
+
+  {rank=same; parser; gen}
+  {rank=same; ast; lang}
+  {rank=same; indent; hist}
+  {rank=same; editor; state}
+
+  user -> manifest [label=" вызов команды"];
+  manifest -> ext [label=" активация"];
+  ext -> parser [label=" DSL-строка"];
+  ext -> gen [label=" AST + профиль"];
+  parser -> ast [label=" строит"];
+  gen -> ast [label=" обход"];
+  gen -> lang [label=" раскладка"];
+  ext -> indent [style=invis];
+  ast -> indent [style=invis];
+  lang -> hist [style=invis];
+  ext -> indent [constraint=false, label=" wrap"];
+  ext -> hist [constraint=false, label=" push/items"];
+  indent -> editor [style=invis];
+  hist -> state [dir=both, style=dashed];
+  ext -> editor [constraint=false, label=" вставка"];
+}

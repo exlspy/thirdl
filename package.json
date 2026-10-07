@@ -1,0 +1,52 @@
+{
+  "name": "codescaffold",
+  "displayName": "CodeScaffold",
+  "description": "Генератор вложенных управляющих конструкций (if/for/while/switch/func/try) из короткой DSL-строки для разных языков.",
+  "version": "1.0.0",
+  "publisher": "student",
+  "license": "MIT",
+  "engines": { "vscode": "^1.80.0" },
+  "categories": ["Snippets", "Other"],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "codescaffold.generate", "title": "CodeScaffold: Сгенерировать конструкцию" },
+      { "command": "codescaffold.wrapSelection", "title": "CodeScaffold: Обернуть выделение" },
+      { "command": "codescaffold.showHistory", "title": "CodeScaffold: История шаблонов" }
+    ],
+    "keybindings": [
+      { "command": "codescaffold.generate", "key": "ctrl+alt+g", "mac": "cmd+alt+g", "when": "editorTextFocus" },
+      { "command": "codescaffold.wrapSelection", "key": "ctrl+alt+w", "mac": "cmd+alt+w", "when": "editorHasSelection" }
+    ],
+    "menus": {
+      "editor/context": [
+        { "command": "codescaffold.wrapSelection", "when": "editorHasSelection", "group": "1_modification" }
+      ]
+    },
+    "configuration": {
+      "title": "CodeScaffold",
+      "properties": {
+        "codescaffold.historySize": {
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 50,
+          "description": "Сколько последних DSL-строк хранить в истории."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node --test out/test/*.test.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.4.0",
+    "@vscode/vsce": "^2.24.0"
+  }
+}
